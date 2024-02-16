@@ -1,7 +1,7 @@
 import axios from "axios";
 import fs from 'fs'
 import inquirer from "inquirer";
-import dotenv from 'dotenv'
+import dotenv from "dotenv";
 dotenv.config()
 const delay = (milliseconds) => {
     console.log(`waiting delay ${milliseconds} millisecond`);
@@ -44,13 +44,12 @@ const telegramLink = process.env.YOUR_TELEGRAM_LINK;
                     console.log('success spam with message at ' + `${r.data.result.date} progress [${i} / ${count}]`);
                 }
             } catch (error) {
-
                 if (error.message == 'Request failed with status code 429') {
                     console.log(error.response.data.description);
                     const ratelimitparam = `${error.response.data.parameters.retry_after}000`
                     await delay(parseInt(ratelimitparam))
                 } else {
-                    console.log(error.message);
+                    console.log(error);
                     break
                 }
             }
@@ -59,6 +58,5 @@ const telegramLink = process.env.YOUR_TELEGRAM_LINK;
 
     } catch (error) {
         console.log(error);
-        return
     }
 })()
