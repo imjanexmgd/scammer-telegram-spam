@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 import dotenv from 'dotenv'
 dotenv.config()
 const delay = (milliseconds) => {
-    console.log(`waiting delay ${milliseconds} second`);
+    console.log(`waiting delay ${milliseconds} millisecond`);
     return new Promise(resolve => {
         setTimeout(resolve, milliseconds);
     });
