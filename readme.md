@@ -27,3 +27,7 @@ BOT_TOKEN=token bot
 CHAT_ID=chat id
 YOUR_TELEGRAM_LINK=your telegram link
 ```
+
+# add word
+
+just add word to target.txt

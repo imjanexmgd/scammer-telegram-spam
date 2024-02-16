@@ -3,7 +3,7 @@ import fs from 'fs'
 import inquirer from "inquirer";
 import dotenv from 'dotenv'
 dotenv.config()
-function delay(milliseconds) {
+const delay = (milliseconds) => {
     console.log(`waiting delay ${milliseconds} second`);
     return new Promise(resolve => {
         setTimeout(resolve, milliseconds);
@@ -33,17 +33,27 @@ const telegramLink = process.env.YOUR_TELEGRAM_LINK;
         }
         kontword = a.join(' ')
         while (i <= count) {
-            const randomIndex = Math.floor(Math.random() * arrText.length)
-            const r = await axios.post(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                parse_mode: 'markdown',
-                chat_id: `${chatid}`,
-                text: `${arrText[randomIndex]}\n\n${kontword}\n\n do you want stop ? contact me lmao ${telegramLink}`
-            })
-            if (r.data.ok == true) {
-                console.log('success spam with message at ' + `${r.data.result.date} progress [${i} / ${count}]`);
+            try {
+                const randomIndex = Math.floor(Math.random() * arrText.length)
+                const r = await axios.post(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    parse_mode: 'markdown',
+                    chat_id: `${chatid}`,
+                    text: `${arrText[randomIndex]}\n\n${kontword}\n\n do you want stop ? contact me lmao ${telegramLink}`
+                })
+                if (r.data.ok == true) {
+                    console.log('success spam with message at ' + `${r.data.result.date} progress [${i} / ${count}]`);
+                }
+                i++
+            } catch (error) {
+                if (error.response.status == 429) {
+                    console.log(error.response.data.description);
+                    const ratelimitparam = `${error.response.data.parameters.retry_after}000`
+                    await delay(parseInt(ratelimitparam))
+                } else {
+                    console.log(error.message);
+                    break
+                }
             }
-            i++
-            await delay(2500)
         }
 
     } catch (error) {
