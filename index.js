@@ -33,8 +33,8 @@ const telegramLink = process.env.YOUR_TELEGRAM_LINK;
         }
         kontword = a.join(' ')
         while (i <= count) {
+            const randomIndex = Math.floor(Math.random() * arrText.length)
             try {
-                const randomIndex = Math.floor(Math.random() * arrText.length)
                 const r = await axios.post(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                     parse_mode: 'markdown',
                     chat_id: `${chatid}`,
@@ -43,9 +43,9 @@ const telegramLink = process.env.YOUR_TELEGRAM_LINK;
                 if (r.data.ok == true) {
                     console.log('success spam with message at ' + `${r.data.result.date} progress [${i} / ${count}]`);
                 }
-                i++
             } catch (error) {
-                if (error.response.status == 429) {
+
+                if (error.message == 'Request failed with status code 429') {
                     console.log(error.response.data.description);
                     const ratelimitparam = `${error.response.data.parameters.retry_after}000`
                     await delay(parseInt(ratelimitparam))
@@ -54,6 +54,7 @@ const telegramLink = process.env.YOUR_TELEGRAM_LINK;
                     break
                 }
             }
+            i++
         }
 
     } catch (error) {
